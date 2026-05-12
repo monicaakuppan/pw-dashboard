@@ -1,0 +1,9 @@
+node_modules/
+test-results/
+dashboard/public/playwright-report/
+dashboard/public/results.json
+dashboard/public/dashboard-data.json
+dashboard/public/history.json
+.vercel/
+.netlify/
+*.log

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playwright Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">◈</span>
+        <div>
+          <div class="brand-name">PW Dashboard</div>
+          <div class="brand-sub">Playwright Execution Monitor</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="run-badge" id="runStatus">—</span>
+        <span class="run-id" id="runId">Loading...</span>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">◑</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- SUMMARY CARDS -->
+    <section class="section">
+      <div class="section-label">Run Summary</div>
+      <div class="cards">
+        <div class="card card--total">
+          <div class="card-val" id="totalTests">—</div>
+          <div class="card-label">Total Tests</div>
+        </div>
+        <div class="card card--pass">
+          <div class="card-val" id="passedTests">—</div>
+          <div class="card-label">Passed</div>
+        </div>
+        <div class="card card--fail">
+          <div class="card-val" id="failedTests">—</div>
+          <div class="card-label">Failed</div>
+        </div>
+        <div class="card card--skip">
+          <div class="card-val" id="skippedTests">—</div>
+          <div class="card-label">Skipped</div>
+        </div>
+        <div class="card card--rate">
+          <div class="card-val" id="passRate">—</div>
+          <div class="card-label">Pass Rate</div>
+          <div class="rate-bar"><div class="rate-fill" id="rateBar"></div></div>
+        </div>
+        <div class="card card--duration">
+          <div class="card-val" id="duration">—</div>
+          <div class="card-label">Duration</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHARTS ROW -->
+    <section class="section">
+      <div class="section-label">Analytics</div>
+      <div class="charts-row">
+        <div class="chart-box">
+          <div class="chart-title">Result Breakdown</div>
+          <canvas id="donutChart" width="200" height="200"></canvas>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+        <div class="chart-box chart-box--wide">
+          <div class="chart-title">Run History (last 20)</div>
+          <canvas id="historyChart" width="600" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTERS + TEST TABLE -->
+    <section class="section">
+      <div class="section-label">Test Results</div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="filterTests('all', this)">All</button>
+        <button class="filter-btn" data-filter="passed" onclick="filterTests('passed', this)">Passed</button>
+        <button class="filter-btn" data-filter="failed" onclick="filterTests('failed', this)">Failed</button>
+        <button class="filter-btn" data-filter="skipped" onclick="filterTests('skipped', this)">Skipped</button>
+        <input class="search-box" type="text" placeholder="Search test name…" oninput="searchTests(this.value)" />
+      </div>
+      <div class="table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Test Name</th>
+              <th>Browser</th>
+              <th>Duration</th>
+              <th>Retries</th>
+              <th>Artifacts</th>
+              <th>Logs</th>
+            </tr>
+          </thead>
+          <tbody id="testTableBody">
+            <tr><td colspan="7" class="empty-row">Loading test results…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LOG MODAL -->
+    <div class="modal-overlay" id="logModal" onclick="closeModal()">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <span class="modal-title" id="modalTitle">Logs</span>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <pre class="modal-body" id="modalBody"></pre>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <span>Playwright Dashboard · Auto-generated report</span>
+    <span id="footerTime"></span>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

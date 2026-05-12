@@ -1,0 +1,8 @@
+[build]
+  publish = "dashboard/public"
+  command = "npm run test:report || node scripts/generate-report.js"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

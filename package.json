@@ -1,0 +1,21 @@
+{
+  "name": "playwright-dashboard",
+  "version": "1.0.0",
+  "description": "Playwright Test Dashboard - Execution Stats & Artifact Publisher",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright test && node scripts/generate-report.js",
+    "dashboard": "node scripts/generate-report.js",
+    "serve": "npx serve dashboard/public -p 3000",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=dashboard/public"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "netlify-cli": "^17.0.0",
+    "vercel": "^34.0.0"
+  }
+}
