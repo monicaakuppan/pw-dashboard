@@ -37,40 +37,25 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo "Running Playwright tests..."
-                bat 'npm run test:report'
-            }
-        }
-        
-        stage('Generate Dashboard') {
-            steps {
-                echo "Generating test dashboard..."
-                bat 'node scripts/generate-report.js'
+                bat 'npm test'
             }
         }
         
         stage('Archive Artifacts') {
             steps {
                 echo "Archiving test reports and artifacts..."
-                archiveArtifacts artifacts: 'dashboard/public/**/*,test-results/**/*', 
+                archiveArtifacts artifacts: 'test-results/**/*', 
                                  allowEmptyArchive: true
             }
         }
         
-        stage('Publish Reports') {
+        stage('Publish Test Results') {
             steps {
-                echo "Publishing test results..."
+                echo "Publishing Playwright test results..."
                 publishHTML([
-                    reportDir: 'dashboard/public/playwright-report',
+                    reportDir: 'playwright-report',
                     reportFiles: 'index.html',
                     reportName: 'Playwright Test Report',
-                    keepAll: true,
-                    alwaysLinkToLastBuild: true
-                ])
-                
-                publishHTML([
-                    reportDir: 'dashboard/public',
-                    reportFiles: 'index.html',
-                    reportName: 'Test Dashboard',
                     keepAll: true,
                     alwaysLinkToLastBuild: true
                 ])
