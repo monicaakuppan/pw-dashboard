@@ -61,6 +61,7 @@ pipeline {
             steps {
                 echo "Publishing Playwright test results..."
                 publishHTML([
+                    allowMissing: true,
                     reportDir: 'dashboard/public/playwright-report',
                     reportFiles: 'index.html',
                     reportName: 'Playwright Test Report',
