@@ -12,7 +12,8 @@ export default defineConfig({
     ['list'],
     ['json', { outputFile: 'dashboard/public/results.json' }],
     ['html', { outputFolder: 'dashboard/public/playwright-report', open: 'never' }],
-    ['./reporter/dashboard-reporter.ts']
+    ['./reporter/dashboard-reporter.ts'],
+    ...(process.env.CI ? [['./reporter/jenkins-progress-reporter.ts'] as [string]] : []),
   ],
 
   use: {

@@ -4,6 +4,9 @@ pipeline {
     environment {
         CI = 'true'
         NODE_ENV = 'ci'
+        // Credentials for JenkinsProgressReporter — store token in Jenkins Credentials Manager
+        JENKINS_USER      = credentials('jenkins-api-user')
+        JENKINS_API_TOKEN = credentials('jenkins-api-token')
     }
     
     options {
