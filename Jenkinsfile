@@ -90,7 +90,9 @@ pipeline {
     post {
         always {
             echo "Pipeline execution completed"
-            cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']])
+            node {
+                cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']])
+            }
         }
         failure {
             echo "❌ Build failed - Check test reports for details"
