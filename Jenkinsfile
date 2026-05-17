@@ -44,8 +44,16 @@ pipeline {
         stage('Archive Artifacts') {
             steps {
                 echo "Archiving test reports and artifacts..."
-                archiveArtifacts artifacts: 'test-results/**/*', 
+                archiveArtifacts artifacts: 'test-results/**/*,dashboard/public/playwright-report/**/*', 
                                  allowEmptyArchive: true
+            }
+        }
+        
+        stage('Verify Reports') {
+            steps {
+                echo "Verifying generated reports..."
+                bat 'dir dashboard\\public 2>nul || echo Dashboard directory not found'
+                bat 'dir dashboard\\public\\playwright-report 2>nul || echo Playwright report not found'
             }
         }
         
@@ -53,7 +61,7 @@ pipeline {
             steps {
                 echo "Publishing Playwright test results..."
                 publishHTML([
-                    reportDir: 'playwright-report',
+                    reportDir: 'dashboard/public/playwright-report',
                     reportFiles: 'index.html',
                     reportName: 'Playwright Test Report',
                     keepAll: true,
