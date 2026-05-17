@@ -4,9 +4,7 @@ pipeline {
     environment {
         CI = 'true'
         NODE_ENV = 'ci'
-        // Credentials for JenkinsProgressReporter — store token in Jenkins Credentials Manager
-        JENKINS_USER      = credentials('jenkins-api-user')
-        JENKINS_API_TOKEN = credentials('jenkins-api-token')
+        JENKINS_USER = 'monicaa'
     }
     
     options {
@@ -39,8 +37,25 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                echo "Running Playwright tests..."
-                bat 'npm test'
+                script {
+                    // Inject Jenkins API credentials when available so JenkinsProgressReporter
+                    // can update the build description after each test. Non-fatal if not configured.
+                    try {
+                        withCredentials([
+                            string(credentialsId: 'jenkins-api-token', variable: 'JENKINS_API_TOKEN')
+                        ]) {
+                            echo "Running Playwright tests (with live build description updates)..."
+                            bat 'npm test'
+                        }
+                    } catch (hudson.AbortException e) {
+                        if (e.message.contains('jenkins-api-token')) {
+                            echo "Jenkins API token not configured — running tests without live description updates"
+                            bat 'npm test'
+                        } else {
+                            throw e
+                        }
+                    }
+                }
             }
         }
         
