@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // reporter/jenkins-progress-reporter.ts
 import {
   Reporter,
@@ -53,6 +54,11 @@ class JenkinsProgressReporter implements Reporter {
         `\n[Jenkins Reporter] Tracking ${this.total} tests for ` +
         `${this.jobName} #${this.buildNumber}`
       );
+    } else if (this.jenkinsUrl && this.jobName && this.buildNumber) {
+      console.log(
+        `\n[Jenkins Reporter] JENKINS_USER / JENKINS_API_TOKEN not set — ` +
+        `live build description updates disabled`
+      );
     }
   }
 
@@ -76,7 +82,7 @@ class JenkinsProgressReporter implements Reporter {
   // ── private ──────────────────────────────────────────────────────────────
 
   private isConfigured(): boolean {
-    return !!(this.jenkinsUrl && this.jobName && this.buildNumber);
+    return !!(this.jenkinsUrl && this.jobName && this.buildNumber && this.user && this.apiToken);
   }
 
   private buildDescription(): string {
@@ -140,9 +146,9 @@ class JenkinsProgressReporter implements Reporter {
           method: 'GET',
           headers: { Authorization: this.authHeader() },
         },
-        res => {
+        (res: import('http').IncomingMessage) => {
           let data = '';
-          res.on('data', chunk => { data += chunk; });
+          res.on('data', (chunk: Buffer | string) => { data += chunk; });
           res.on('end', () => resolve(data));
         }
       );
@@ -173,7 +179,7 @@ class JenkinsProgressReporter implements Reporter {
           method: 'POST',
           headers,
         },
-        res => {
+        (res: import('http').IncomingMessage) => {
           res.resume(); // drain response body
           if (res.statusCode && res.statusCode >= 400) {
             reject(new Error(`Jenkins API responded with HTTP ${res.statusCode}`));
