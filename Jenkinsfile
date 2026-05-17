@@ -90,8 +90,10 @@ pipeline {
     post {
         always {
             echo "Pipeline execution completed"
-            node {
-                cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']])
+            script {
+                node {
+                    cleanWs(deleteDirs: true, patterns: [[pattern: 'node_modules/**', type: 'INCLUDE']])
+                }
             }
         }
         failure {
